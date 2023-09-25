@@ -1,8 +1,9 @@
 import React from 'react';
 import { Grid, Typography, Button } from '@mui/material';
+import Link from 'next/link'
 
-const styles = {
-  heroContainer: {
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
     width: '100%',
     minHeight: '100vh',
     position: 'relative',
@@ -38,6 +39,7 @@ const styles = {
   },
 
   heroButton: {
+    height: '64px',
     margin: '10px',
     padding: '20px 40px',
     color: 'white',
@@ -46,10 +48,6 @@ const styles = {
     borderRadius: '10px',
     fontWeight: 'bold',
     transition: 'background-color 0.3s, border-color 0.3s',
-    '&:hover': {
-      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-      borderColor: 'rgba(246, 190, 0)',
-    },
   },
 
   typeButtonContainer: {
@@ -100,16 +98,16 @@ const carTypes = [
 ];
 
 const manufacturers = [
-  "Abarath", "Dacia", "Kia", "Mini", "Skoda", "Alfa Romeo", "DS", "Lamborghini", "Mitsubishi", "Smart",
-  "Alpine", "Fiat", "Land Rover", "Nissan", "SsangYong", "Aston Martin", "Ford", "Lexus", "ORA", "Subaru", "Audi",
-  "Genesis", "Lotus", "Peugeot", "Suzuki", "Bentley", "Honda", "Maserati", "Polestar", "Tesla", "BMW",
-  "Hyundai", "Mazda", "Porsche", "Toyota", "BYD", "Infiniti", "McLaren", "Renault", "Vauxhall", "Citroen", "Jaguar",
-  "Mercedes", "Rolls-Royce", "Volkswagen", "Cupra", "Jeep", "MG", "Seat", "Volvo"
+  "Abarath", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "BYD", "Bentley", "BMW", "Citroen", "Cupra", "DS",
+  "Dacia", "Fiat", "Ford", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Land Rover",
+  "Lamborghini", "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes", "MG", "Mini", "Mitsubishi", "Nissan",
+  "ORA", "Peugeot", "Polestar", "Porsche", "Renault", "Rolls-Royce", "Seat", "Skoda", "Smart", "SsangYong",
+  "Subaru", "Suzuki", "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo"
 ];
 
-const Hero = () => {
+const Home: React.FC = () => {
   return (
-    <Grid container className="hero" style={styles.heroContainer}>
+    <Grid container className="contain" style={styles.container}>
       <Grid item xs={12}>
         <div className="hero__video-container" style={styles.videoContainer}>
           <video src="/video/hero.mp4" autoPlay loop muted style={styles.video} />
@@ -123,12 +121,16 @@ const Hero = () => {
           
           {/* Buttons at the bottom */}
           <div className="hero__buttons" style={styles.heroButtonContainer}>
-            <Button variant="contained" color="primary" sx={styles.heroButton}>
-              Buy a car
-            </Button>
-            <Button variant="contained" color="primary" sx={styles.heroButton}>
-              Sell my car
-            </Button>
+            <Link href="/buy-a-car">
+              <Button variant="contained" color="primary" sx={{ ...styles.heroButton, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
+                Buy a car
+              </Button>
+            </Link>
+            <Link href="/sell-a-car">
+              <Button variant="contained" color="primary" sx={{ ...styles.heroButton, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
+                Sell my car
+              </Button>
+            </Link>
           </div>
         </div>
       </Grid>
@@ -137,7 +139,7 @@ const Hero = () => {
         <Typography variant="h4" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '1%' }}>
           Explore Our Selection
         </Typography>
-        <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '5%' }}>
+        <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '4%' }}>
           Browse by Type
         </Typography>
         <div style={styles.typeButtonContainer}>
@@ -149,10 +151,10 @@ const Hero = () => {
           ))}
         </div>
 
-        <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '2.5%', marginTop: '5%' }}>
+        <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '2%', marginTop: '4%' }}>
           Browse by Manufacturer
         </Typography>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4%', }}>
           <div style={styles.gridContainer}>
             {manufacturers.map((manufacturer, index) => (
               <div key={index} style={styles.manufButton}>
@@ -169,4 +171,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default Home;

@@ -1,9 +1,9 @@
-import Hero from './Hero';
+import Home from './Home';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 export { 
-    Hero,
+    Home,
     Navbar,
-    Footer
+    Footer,
 };

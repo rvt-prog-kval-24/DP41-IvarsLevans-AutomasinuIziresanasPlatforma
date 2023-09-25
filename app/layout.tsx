@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Drive Wise',
-  description: 'Navigate the auction circuit.',
+  description: 'Driven by Excellence.',
 }
 
 export default function RootLayout({
@@ -15,7 +15,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Navbar />
-      {children}
+        <main>
+          {children}
+        </main>
       <Footer />
     </html>
   )

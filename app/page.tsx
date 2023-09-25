@@ -1,12 +1,178 @@
-import { Home } from '@/components'
-import Image from 'next/image'
+import React from 'react';
+import { Grid, Typography, Button } from '@mui/material';
+import Link from 'next/link'
 
-export default function Page() {
+const styles: { [key: string]: React.CSSProperties } = {
+  container: {
+    width: '100%',
+    minHeight: '100vh',
+    position: 'relative',
+  },
+
+  videoContainer: {
+    position: 'relative',
+    width: '100%',
+    height: '100vh',
+  },
+
+  video: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+
+  heroTextContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+  },
+
+  heroButtonContainer: {
+    position: 'absolute',
+    bottom: '10%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    textAlign: 'center',
+  },
+
+  heroButton: {
+    height: '64px',
+    margin: '10px',
+    padding: '20px 40px',
+    color: 'white',
+    backgroundColor: 'rgba(0, 0, 0, 0.0)',
+    border: '2px solid white',
+    borderRadius: '10px',
+    fontWeight: 'bold',
+    transition: 'background-color 0.3s, border-color 0.3s',
+  },
+
+  typeButtonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  typeButton: {
+    margin: '5px',
+    padding: '10px',
+    color: 'white',
+    backgroundColor: 'transparent',
+    width: '150px',
+    height: '100px',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    textAlign: 'center',
+    whiteSpace: 'nowrap',
+  },
+
+  typeButtonText: {
+    marginTop: '10px',
+  },
+  
+  manufButton: {
+    margin: '5px',
+    padding: '10px 30px',
+    color: 'white',
+    backgroundColor: 'transparent',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    whiteSpace: 'nowrap',
+  },
+
+  gridContainer: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(5, 1fr)',
+    margin: '0 auto',
+  },
+};
+
+const carTypes = [
+  "Sports Cars", "Convertibles", "Coupes", "Hatchbacks", "Saloons", "Estate Cars", "People Carriers", "SUVs"
+];
+
+const manufacturers = [
+  "Abarath", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "BYD", "Bentley", "BMW", "Citroen", "Cupra", "DS",
+  "Dacia", "Fiat", "Ford", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Land Rover",
+  "Lamborghini", "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes", "MG", "Mini", "Mitsubishi", "Nissan",
+  "ORA", "Peugeot", "Polestar", "Porsche", "Renault", "Rolls-Royce", "Seat", "Skoda", "Smart", "SsangYong",
+  "Subaru", "Suzuki", "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo"
+];
+
+const Home: React.FC = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between">
-      <div className="overflow-hidden">
-        <Home />
-      </div>
-    </main>
-  )
-}
+    <Grid container className="contain" style={styles.container}>
+      <Grid item xs={12}>
+        <div className="hero__video-container" style={styles.videoContainer}>
+          <video src="/video/hero.mp4" autoPlay loop muted style={styles.video} />
+          
+          {/* Centered text */}
+          <div className="hero__text" style={styles.heroTextContainer}>
+            <Typography variant="h1" component="h1" style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 'bold' }}>
+              Driven by Excellence.
+            </Typography>
+          </div>
+          
+          {/* Buttons at the bottom */}
+          <div className="hero__buttons" style={styles.heroButtonContainer}>
+            <Link href="/buy-a-car">
+              <Button variant="contained" color="primary" sx={{ ...styles.heroButton, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
+                Buy a car
+              </Button>
+            </Link>
+            <Link href="/sell-a-car">
+              <Button variant="contained" color="primary" sx={{ ...styles.heroButton, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
+                Sell my car
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </Grid>
+  
+      <Grid item xs={12} style={{ textAlign: 'center', marginTop: '5%' }}>
+        <Typography variant="h4" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '1%' }}>
+          Explore Our Selection
+        </Typography>
+        <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '4%' }}>
+          Browse by Type
+        </Typography>
+        <div style={styles.typeButtonContainer}>
+          {carTypes.map((carType, index) => (
+            <div key={index} style={styles.typeButton}>
+              <Link href={`${encodeURIComponent(carType.toLowerCase())}`}>
+                <img src={`icon/car-type/${carType}.svg`} alt={carType} />
+                <p style={styles.typeButtonText}>{carType}</p>
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '2%', marginTop: '4%' }}>
+          Browse by Manufacturer
+        </Typography>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4%', }}>
+          <div style={styles.gridContainer}>
+          {manufacturers.map((manufacturer, index) => (
+            <div key={index} style={styles.manufButton}>
+              <Link href={`${manufacturer.toLowerCase()}`}>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <img src={`icon/car-manuf/${manufacturer}.svg`} alt={manufacturer} />
+                    <p style={{ marginLeft: '10px' }}>{manufacturer}</p>
+                  </div>
+              </Link>
+            </div>
+          ))}
+          </div>
+        </div>
+      </Grid>
+    </Grid>
+  );
+};
+
+export default Home;

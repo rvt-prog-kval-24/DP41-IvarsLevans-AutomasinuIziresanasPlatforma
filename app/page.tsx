@@ -142,17 +142,21 @@ const Home: React.FC = () => {
         <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '4%' }}>
           Browse by Type
         </Typography>
-        <div style={styles.typeButtonContainer}>
-          {carTypes.map((carType, index) => (
-            <div key={index} style={styles.typeButton}>
-              <Link href={`${encodeURIComponent(carType.toLowerCase())}`}>
-                <img src={`icon/car-type/${carType}.svg`} alt={carType} />
-                <p style={styles.typeButtonText}>{carType}</p>
-              </Link>
-            </div>
-          ))}
-        </div>
+          <div style={styles.typeButtonContainer}>
+            {carTypes.map((carType, index) => {
+              // Replace spaces with hyphens in the car type
+              const urlCarType = encodeURIComponent(carType.toLowerCase().replace(/\s+/g, '-'));
 
+              return (
+                <div key={index} style={styles.typeButton}>
+                  <Link href={urlCarType}>
+                    <img src={`icon/car-type/${carType}.svg`} alt={carType} />
+                    <p style={styles.typeButtonText}>{carType}</p>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
         <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '2%', marginTop: '4%' }}>
           Browse by Manufacturer
         </Typography>

@@ -99,8 +99,8 @@ const carTypes = [
 
 const manufacturers = [
   "Abarath", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "BYD", "Bentley", "BMW", "Citroen", "Cupra", "DS",
-  "Dacia", "Fiat", "Ford", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Land Rover",
-  "Lamborghini", "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes", "MG", "Mini", "Mitsubishi", "Nissan",
+  "Dacia", "Fiat", "Ford", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover",
+  "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes", "MG", "Mini", "Mitsubishi", "Nissan",
   "ORA", "Peugeot", "Polestar", "Porsche", "Renault", "Rolls-Royce", "Seat", "Skoda", "Smart", "SsangYong",
   "Subaru", "Suzuki", "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo"
 ];
@@ -158,16 +158,21 @@ const Home: React.FC = () => {
         </Typography>
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4%', }}>
           <div style={styles.gridContainer}>
-          {manufacturers.map((manufacturer, index) => (
-            <div key={index} style={styles.manufButton}>
-              <Link href={`${manufacturer.toLowerCase()}`}>
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <img src={`icon/car-manuf/${manufacturer}.svg`} alt={manufacturer} />
-                    <p style={{ marginLeft: '10px' }}>{manufacturer}</p>
-                  </div>
-              </Link>
-            </div>
-          ))}
+            {manufacturers.map((manufacturer, index) => {
+              // Replace spaces with hyphens in the manufacturer name
+              const urlManufacturer = manufacturer.toLowerCase().replace(/\s+/g, '-');
+
+              return (
+                <div key={index} style={styles.manufButton}>
+                  <Link href={urlManufacturer}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <img src={`icon/car-manuf/${manufacturer}.svg`} alt={manufacturer} />
+                      <p style={{ marginLeft: '10px' }}>{manufacturer}</p>
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       </Grid>

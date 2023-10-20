@@ -1,6 +1,8 @@
 import React from 'react';
 import { Grid, Typography, Button } from '@mui/material';
 import Link from 'next/link'
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {

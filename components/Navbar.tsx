@@ -19,7 +19,9 @@ const Navbar: React.FC = () => {
         <Box sx={{ flex: '1' }}>
           <MenuIcon /> {/* Menu icon on the left */}
         </Box>
-        <img src="image/logo.png" width="20%" height="20%" alt="Logo" />
+        <Box sx={{ flex: '1', display: 'flex', justifyContent: 'center' }}>
+          <img src="image/logo.png" width="200" height="200" alt="Logo" />
+        </Box>
           <Box
             sx={{
               flex: '1',

@@ -11,7 +11,7 @@ import { useState } from 'react'
 export const Form = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+  const callbackUrl = searchParams.get('callbackUrl') || '/'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -35,7 +35,7 @@ export const Form = () => {
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-12 w-full sm:w-[400px]">
+    <form onSubmit={onSubmit} className="space-y-8 w-full sm:w-[400px]">
       <div className="grid w-full items-center gap-1.5">
         <Label htmlFor="email">Email</Label>
         <Input

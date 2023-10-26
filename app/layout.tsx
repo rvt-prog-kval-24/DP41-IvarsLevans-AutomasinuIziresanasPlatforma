@@ -1,25 +1,30 @@
-"use client"
-
-import { Footer, Navbar } from '../components/nav'
 import './globals.css'
-import type { Metadata } from 'next'
-export const metadata: Metadata = {
+import { Providers } from './providers'
+import { Footer, Navbar } from '../components/nav'
+
+export const metadata = {
   title: 'Drive Wise',
-  description: 'Driven by Excellence.',
+  description: 'Driven by Excellence'
 }
 
 export default function RootLayout({
-  children,
+  children
 }: {
   children: React.ReactNode
 }) {
   return (
     <html lang="en">
-      <Navbar />
-        <main>
-          {children}
-        </main>
-      <Footer />
+      <head>
+        <title>{metadata.title}</title>
+        <meta name="description" content={metadata.description} />
+      </head>
+      <body>
+        <header>
+          <Navbar />
+        </header>
+        <Providers>{children}</Providers>
+        <Footer />
+      </body>
     </html>
   )
 }

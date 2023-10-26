@@ -4,19 +4,23 @@ import { NextResponse } from 'next/server'
 
 export async function POST(req: Request) {
   try {
-    const { email, password } = await req.json()
+    const { email, password, firstName, lastName } = await req.json()
     const hashed = await hash(password, 12)
 
     const user = await prisma.user.create({
       data: {
         email,
-        password: hashed
+        password: hashed,
+        firstName,
+        lastName
       }
     })
 
     return NextResponse.json({
       user: {
-        email: user.email
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName
       }
     })
   } catch (err: any) {

@@ -12,7 +12,6 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
-      name: 'Sign in',
       credentials: {
         email: {
           label: 'Email',
@@ -48,7 +47,8 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id + '',
           email: user.email,
-          name: user.name,
+          firstName: user.firstName,
+          lastName: user.lastName,
           randomKey: 'Hey cool'
         }
       }

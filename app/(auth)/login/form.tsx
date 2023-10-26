@@ -5,35 +5,33 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signIn } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 
-export const RegisterForm = () => {
+export const Form = () => {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
+  const [error, setError] = useState('')
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-
     try {
-      const res = await fetch('/api/register', {
-        method: 'POST',
-        body: JSON.stringify({
-          email,
-          password
-        }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
+      const res = await signIn('credentials', {
+        redirect: false,
+        email,
+        password,
+        callbackUrl
       })
-      if (res.ok) {
-        signIn()
+      console.log('Res', res)
+      if (!res?.error) {
+        router.push(callbackUrl)
       } else {
-        setError((await res.json()).error)
+        setError('Invalid email or password')
       }
-    } catch (error: any) {
-      setError(error?.message)
-    }
+    } catch (err: any) {}
   }
 
   return (
@@ -63,7 +61,7 @@ export const RegisterForm = () => {
       {error && <Alert>{error}</Alert>}
       <div className="w-full">
         <Button className="w-full" size="lg">
-          Register
+          Login
         </Button>
       </div>
     </form>

@@ -102,7 +102,7 @@ const carTypes = [
 ];
 
 const manufacturers = [
-  "Abarath", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "BYD", "Bentley", "BMW", "Citroen", "Cupra", "DS",
+  "Abarth", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "BYD", "Bentley", "BMW", "Citroen", "Cupra", "DS",
   "Dacia", "Fiat", "Ford", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover",
   "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes", "MG", "Mini", "Mitsubishi", "Nissan",
   "ORA", "Peugeot", "Polestar", "Porsche", "Renault", "Rolls-Royce", "Seat", "Skoda", "Smart", "SsangYong",

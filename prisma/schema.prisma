@@ -14,5 +14,20 @@ model User {
   id       Int     @id @default(autoincrement())
   email    String  @unique
   password String
-  name     String?
+  firstName     String
+  lastName      String
+}
+
+model Manufacturer {
+  id               Int      @id @default(autoincrement())
+  name             String
+  carModel         CarModel[]
+}
+
+model CarModel {
+  id               Int      @id @default(autoincrement())
+  manufacturer     Manufacturer @relation(fields: [manufacturerId], references: [id])
+  manufacturerId   Int
+  name             String
+  bodyType         String
 }

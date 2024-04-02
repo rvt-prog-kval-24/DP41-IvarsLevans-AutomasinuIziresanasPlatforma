@@ -3,6 +3,7 @@ import { Grid, Typography, Button } from '@mui/material';
 import Link from 'next/link'
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
+import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
@@ -44,6 +45,7 @@ const styles: { [key: string]: React.CSSProperties } = {
 
   heroButton: {
     height: '64px',
+    width: '250px',
     margin: '10px',
     padding: '20px 40px',
     color: 'white',
@@ -80,6 +82,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   
   manufButton: {
+    marginBottom: '5%',
     margin: '5px',
     padding: '10px 30px',
     color: 'white',
@@ -102,11 +105,7 @@ const carTypes = [
 ];
 
 const manufacturers = [
-  "Abarth", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "BYD", "Bentley", "BMW", "Citroen", "Cupra", "DS",
-  "Dacia", "Fiat", "Ford", "Genesis", "Honda", "Hyundai", "Infiniti", "Jaguar", "Jeep", "Kia", "Lamborghini", "Land Rover",
-  "Lexus", "Lotus", "Maserati", "Mazda", "McLaren", "Mercedes", "MG", "Mini", "Mitsubishi", "Nissan",
-  "ORA", "Peugeot", "Polestar", "Porsche", "Renault", "Rolls-Royce", "Seat", "Skoda", "Smart", "SsangYong",
-  "Subaru", "Suzuki", "Tesla", "Toyota", "Vauxhall", "Volkswagen", "Volvo"
+  "Audi", "BMW", "Mercedes", "Porsche", "Volkswagen"
 ];
 
 const Home: React.FC = () => {
@@ -119,25 +118,21 @@ const Home: React.FC = () => {
           {/* Centered text */}
           <div className="hero__text" style={styles.heroTextContainer}>
             <Typography variant="h1" component="h1" style={{ fontFamily: 'Helvetica, Arial, sans-serif', fontWeight: 'bold' }}>
-              Driven by Excellence.
+              Driven by Excellence
             </Typography>
           </div>
           
-          {/* Buttons at the bottom */}
-          <div className="hero__buttons" style={styles.heroButtonContainer}>
-            <Link href="/buy-a-car">
-              <Button variant="contained" color="primary" sx={{ ...styles.heroButton, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
-                Buy a car
-              </Button>
-            </Link>
-            <Link href="/sell-a-car">
-              <Button variant="contained" color="primary" sx={{ ...styles.heroButton, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
-                Sell my car
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </Grid>
+              {/* Buttons at the bottom */}
+              <div className="hero__buttons" style={styles.heroButtonContainer}>
+                <Link href="/catalog">
+                  <Button variant="contained" color="primary" sx={{ ...styles.heroButton, '&:hover': { backgroundColor: 'rgba(255, 255, 255, 0.1)' } }}>
+                    Browse Catalog
+                    <DoubleArrowIcon style={{ marginLeft: '10px' }} />
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </Grid>
   
       <Grid item xs={12} style={{ textAlign: 'center', marginTop: '5%' }}>
         <Typography variant="h4" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '1%' }}>
@@ -161,10 +156,10 @@ const Home: React.FC = () => {
               );
             })}
           </div>
-        <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '2%', marginTop: '4%' }}>
+          <Typography variant="h6" component="h2" style={{ fontFamily: 'Helvetica, Arial, sans-serif', color: 'white', fontWeight: 'bold', marginBottom: '2%', marginTop: '4%' }}>
           Browse by Manufacturer
         </Typography>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4%', }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '4%' }}>
           <div style={styles.gridContainer}>
             {manufacturers.map((manufacturer, index) => {
               // Replace spaces with hyphens in the manufacturer name
@@ -173,9 +168,9 @@ const Home: React.FC = () => {
               return (
                 <div key={index} style={styles.manufButton}>
                   <Link href={urlManufacturer}>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                      <img src={`icon/car-manuf/${manufacturer}.svg`} alt={manufacturer} />
-                      <p style={{ marginLeft: '10px' }}>{manufacturer}</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                      <img src={`icon/car-manuf/${manufacturer}.svg`} alt={manufacturer} style={{ width: '50px', height: '50px' }} />
+                      <p style={{ marginTop: '10px' }}>{manufacturer}</p>
                     </div>
                   </Link>
                 </div>

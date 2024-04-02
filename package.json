@@ -13,7 +13,8 @@
   },
   "dependencies": {
     "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.14.15",
+    "@headlessui/react": "^1.7.17",
+    "@mui/icons-material": "^5.15.0",
     "@prisma/client": "^4.10.1",
     "@radix-ui/react-label": "^2.0.1",
     "@types/node": "18.14.1",

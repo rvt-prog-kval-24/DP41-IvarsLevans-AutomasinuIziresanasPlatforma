@@ -1,6 +1,9 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,23 +14,46 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  password String
-  firstName     String
-  lastName      String
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  rentals       Rental[]
 }
 
-model Manufacturer {
-  id               Int      @id @default(autoincrement())
-  name             String
-  carModel         CarModel[]
+model Car {
+  id            String   @id @default(cuid())
+  kmpl          Float
+  highway_kmpl  Float
+  category      String
+  transmission  String
+  fuel_type     String
+  manufacturer  String
+  model         String
+  year          Int
+  slug          String
+  rental_factor Float
+  rental_price  Float
+  available     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  rentals       Rental[]
 }
 
-model CarModel {
-  id               Int      @id @default(autoincrement())
-  manufacturer     Manufacturer @relation(fields: [manufacturerId], references: [id])
-  manufacturerId   Int
-  name             String
-  bodyType         String
+model Rental {
+  id         String   @id @default(cuid())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  car        Car      @relation(fields: [carId], references: [id])
+  carId      String
+  startDate  DateTime
+  endDate    DateTime
+  ongoing    Boolean
+  totalPrice Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }

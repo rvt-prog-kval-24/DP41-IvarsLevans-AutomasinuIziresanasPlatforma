@@ -23,6 +23,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   rentals       Rental[]
+  admin         Boolean   @default(false)
 }
 
 model Car {

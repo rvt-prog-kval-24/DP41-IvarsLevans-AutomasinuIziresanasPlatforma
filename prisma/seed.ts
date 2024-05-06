@@ -168,7 +168,7 @@ const cars = [
     model: "3 Series",
     year: 2021,
     rental_factor: 3.66,
-    slug: "bmw-serie-3-2021",
+    slug: "bmw-3-series-2021",
   },
 ];
 

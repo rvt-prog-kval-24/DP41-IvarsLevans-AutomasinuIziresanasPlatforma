@@ -19,10 +19,6 @@ const Account = () => {
         <h1 className="text-xl font-bold text-white">Profile Information</h1>
         <Information user={session?.user!} />
       </div>
-      <div className="space-y-4" id="history">
-        <h1 className="text-xl font-bold text-white">Bookings</h1>
-        <UserRentals email={session?.user?.email!} />
-      </div>
     </div>
   );
 };

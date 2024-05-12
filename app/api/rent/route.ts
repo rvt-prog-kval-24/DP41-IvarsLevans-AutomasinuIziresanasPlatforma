@@ -5,13 +5,14 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { car, userEmail, startDate, finishDate } = body;
+    const { dealership, car, userEmail, startDate, finishDate } = body;
 
     const totalPrice =
       car.rental_price * (dayjs(finishDate).diff(startDate, "day") + 1);
 
     const newRental = await prisma.rental.create({
       data: {
+        dealership: { connect: { id: dealership.id } },
         car: { connect: { id: car.id } },
         user: { connect: { email: userEmail } },
         startDate,
@@ -40,6 +41,7 @@ export async function GET() {
   try {
     const rentals = await prisma.rental.findMany({
       include: {
+        dealership: true,
         car: true,
         user: { select: { id: true, name: true, email: true } },
       },

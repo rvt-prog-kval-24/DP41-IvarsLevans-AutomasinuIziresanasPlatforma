@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
     if (userEmail) {
       const rentals = await prisma.rental.findMany({
         where: { user: { email: userEmail.toString() } },
-        include: { car: true },
+        include: { dealership: true, car: true },
       });
 
       return NextResponse.json({ rentals }, { status: 200 });

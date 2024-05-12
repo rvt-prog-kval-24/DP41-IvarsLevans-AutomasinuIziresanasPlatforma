@@ -1,6 +1,22 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
+const dealerships = [
+  {
+    country: "Latvia",
+    city: "Riga",
+    address: "Brivibas iela 123",
+    email: "email1@example.com",
+    phone: "+371 12345678"
+  },
+  {
+    country: "Latvia",
+    city: "Riga",
+    address: "Lacplesa iela 456",
+    email: "email2@example.com",
+    phone: "+371 24567890"
+  },
+];
 const cars = [
   {
     kmpl: 13.5,
@@ -173,20 +189,24 @@ const cars = [
 ];
 
 async function main() {
-  await prisma.rental.deleteMany();
-  await prisma.car.deleteMany();
-  await prisma.car.createMany({
-    data: cars.map((car) => ({ ...car, rental_price: 75 * car.rental_factor })),
-  });
+  // Check if there are any existing rentals
+  const existingRentals = await prisma.rental.count();
+  
+  // If there are no existing rentals, proceed with deleting and seeding data
+  if (existingRentals === 0) {
+    await prisma.dealership.deleteMany();
+    await prisma.dealership.createMany({
+      data: dealerships.map((dealership) => ({
+        ...dealership,
+      })),
+    });
+  
+    await prisma.rental.deleteMany();
+    await prisma.car.deleteMany();
+    await prisma.car.createMany({
+      data: cars.map((car) => ({ ...car, rental_price: 75 * car.rental_factor })),
+    });
+  } else {
+    console.log("Skipping deletion because there are existing rentals.");
+  }
 }
-main()
-  .then(async () => {
-    console.log("Database seeded.");
-
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });

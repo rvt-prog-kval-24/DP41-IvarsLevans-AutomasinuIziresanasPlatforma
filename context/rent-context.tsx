@@ -1,9 +1,12 @@
 "use client";
 import { ICar } from "@/types/car";
+import { IDealership } from "@/types/dealership";
 import { dayjs } from "@/lib/dayjs";
 import { ReactNode, createContext, useContext, useState } from "react";
 
 interface RentContextType {
+  dealership: IDealership | null;
+  handleSetDealership(dealership: IDealership): void;
   car: ICar | null;
   handleSetCar(car: ICar): void;
   startDate: Date | undefined;
@@ -18,6 +21,8 @@ interface RentContextType {
 }
 
 export const RentContext = createContext<RentContextType>({
+  dealership: null,
+  handleSetDealership: (): void => {},
   car: null,
   handleSetCar: (): void => {},
   startDate: undefined,
@@ -46,6 +51,7 @@ export function useRent() {
 }
 
 export default function RentProvider({ children }: RentProviderProps) {
+  const [dealership, setDealership] = useState<IDealership | null>(null);
   const [car, setCar] = useState<ICar | null>(null);
 
   const [startDate, setStartDate] = useState<Date>();
@@ -77,11 +83,16 @@ export default function RentProvider({ children }: RentProviderProps) {
     );
   }
 
+  function handleSetDealership(dealership: IDealership) {
+    setDealership(dealership);
+  }
+
   function handleSetCar(car: ICar) {
     setCar(car);
   }
 
   function clearRent() {
+    setDealership(null);
     setCar(null);
     setStartDate(undefined);
     setStartTime(undefined);
@@ -92,6 +103,8 @@ export default function RentProvider({ children }: RentProviderProps) {
   return (
     <RentContext.Provider
       value={{
+        dealership,
+        handleSetDealership,
         car,
         handleSetCar,
         startDate,

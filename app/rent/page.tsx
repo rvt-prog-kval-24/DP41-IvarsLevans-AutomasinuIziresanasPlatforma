@@ -1,5 +1,6 @@
 "use client";
 import RentCarPreviewer from "@/components/rent/rent-car-previewer";
+import DealershipSelect from "@/components/rent/rent-dealership-select"; // Import DealershipSelect component
 import RentDatePicker from "@/components/rent/rent-date-picker";
 import RentHeader from "@/components/rent/rent-header";
 import RentVehicles from "@/components/rent/rent-vehicles";
@@ -25,7 +26,7 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
     () => Number(searchParams.step) || 1
   );
 
-  const { car, startDate, finishDate, clearRent } = useRent();
+  const { car, startDate, finishDate, dealership, clearRent } = useRent(); 
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -57,18 +58,19 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
     const response = await fetch("/api/rent", {
       method: "POST",
       headers: {
-        "Content-Type": "application-json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         car,
         userEmail: session?.user?.email,
         startDate,
         finishDate,
+        dealership, // Include selectedDealership in the request body
       }),
     });
 
     if (response.ok) {
-      router.push("/account");
+      router.push("/account/history");
       clearRent();
     }
   }
@@ -83,7 +85,10 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
 
       <div className="container mx-auto px-6 py-24 flex flex-col-reverse gap-8 xl:flex-row justify-between"> 
         {currentStep === 1 && (
-          <RentDatePicker handleIncrementStep={handleIncrementStep} />
+          <div className="">
+            <DealershipSelect /> {/* Include DealershipSelect component */}
+            <RentDatePicker handleIncrementStep={handleIncrementStep} />
+          </div>
         )}
         {currentStep === 2 && <RentVehicles />}
 
@@ -124,6 +129,11 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
                   (dayjs(finishDate).diff(startDate, "day") + 1)
                 ).toFixed(2)}
               </div>
+              {/* Display  address */}
+              <div className="text-white text-xl flex flex-col gap-1">
+                <span className="font-bold">Pick Up & Drop Off Address: </span>
+                {dealership?.address}
+              </div>
               <Button
                 onClick={handleCreateRent}
                 className="hidden lg:inline-flex text-lg"
@@ -133,11 +143,11 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
             </div>
             <div className="flex flex-1 sm:flex-col border p-8 rounded-lg items-center sm:items-start">
               <div className="space-y-1 flex-1 sm:flex-none">
-                <h1 className="text-xl font-bold ">
+                <h1 className="text-white text-xl font-bold ">
                   <span className="font-normal">{car?.manufacturer} </span>
                   {car?.model}
                 </h1>
-                <h3 className="text-foreground/50">{car?.year}</h3>
+                <h3 className="text-white text-foreground/50">{car?.year}</h3>
               </div>
               <div className="relative aspect-video w-full">
                 <Image

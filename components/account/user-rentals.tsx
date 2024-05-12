@@ -29,6 +29,13 @@ const UserRentals = ({ email }: UserRentalProps) => {
             <Badge className={rental.ongoing ? "bg-green-300" : "bg-primary"}>
               {rental.ongoing ? "In progress" : "Not in progress"}
             </Badge>
+              {/* Display address */}
+              <h1 className="text-white font-bold flex flex-col text-lg">
+              Pick Up & Drop Off Address:{" "}
+              <span className="font-normal">
+                {rental.dealership?.address}
+              </span>
+            </h1>
             <h1 className="text-white font-bold flex flex-col text-lg">
               Pick up date:{" "}
               <span className="font-normal">

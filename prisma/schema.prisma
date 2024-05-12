@@ -46,15 +46,27 @@ model Car {
 }
 
 model Rental {
-  id         String   @id @default(cuid())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  car        Car      @relation(fields: [carId], references: [id])
-  carId      String
-  startDate  DateTime
-  endDate    DateTime
-  ongoing    Boolean
-  totalPrice Float
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id           String     @id @default(cuid())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       String
+  car          Car        @relation(fields: [carId], references: [id])
+  carId        String
+  startDate    DateTime
+  endDate      DateTime
+  ongoing      Boolean
+  totalPrice   Float
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  dealership   Dealership @relation(fields: [dealershipId], references: [id])
+  dealershipId String
+}
+
+model Dealership {
+  id        String   @id @default(cuid())
+  country   String
+  city      String
+  address   String
+  email     String
+  phone     String
+  rentals   Rental[]
 }

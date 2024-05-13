@@ -88,3 +88,12 @@ html {
 ::-webkit-scrollbar {
   display: none;
 }
+
+/*
+input[type="time"] { 
+  background: red-500;
+  color: white;
+  border: none;
+  color-scheme: dark;
+}
+*/

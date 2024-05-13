@@ -22,6 +22,23 @@ const RentCarPreviewer = () => {
           fill
         />
       </div>
+      <div>
+        <h3 className="text-base font-bold flex-col">
+            Details:
+        </h3>
+        <h3 className="text-base flex-col" style={{ margin: "0.2em 0" }}>
+            {car?.category && car.category.charAt(0).toUpperCase() + car.category.slice(1)}
+        </h3>
+        <h3 className="text-base flex-col" style={{ margin: "0.2em 0" }}>
+            {car?.transmission && car.transmission.charAt(0).toUpperCase() + car.transmission.slice(1)}
+        </h3>
+        <h3 className="text-base flex-col" style={{ margin: "0.2em 0" }}>
+            Highway kmpl: {car?.highway_kmpl}
+        </h3>
+        <h3 className="text-base flex-col" style={{ margin: "0.2em 0" }}>
+            Kmpl: {car?.kmpl}
+        </h3>
+      </div>
     </div>
   );
 };

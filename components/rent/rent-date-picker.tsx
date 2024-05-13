@@ -24,7 +24,7 @@ const RentDatePicker = ({ handleIncrementStep }: RentDatePickerProps) => {
   } = useRent();
 
   return (
-    <div className="space-y-8 flex-1" style={{ marginTop: "120px" }}>
+    <div className="space-y-8 flex-1" style={{ marginTop: "50px" }}>
       <h1 className="text-3xl font-bold text-white">
         Select the date to proceed with the reservation
       </h1>

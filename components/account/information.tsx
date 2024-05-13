@@ -30,7 +30,6 @@ const Information = ({ user }: InformationProps) => {
       const data = await response.json();
       console.error("Error deleting account:", data.message);
       // Display error message to the user
-      // You can implement this part based on your UI requirements
     }
   };
 
@@ -48,9 +47,6 @@ const Information = ({ user }: InformationProps) => {
           <h1 className="text-white text-xl font-bold">{user.name}</h1>
           <h3 className="text-white text-sm sm:text-base font-medium text-foreground/50">
             {user.email}
-          </h3>
-          <h3 className="text-white text-sm sm:text-base font-medium text-foreground/50">
-            {user.admin ? "Admin" : "Not Admin"}
           </h3>
         </div>
       </div>

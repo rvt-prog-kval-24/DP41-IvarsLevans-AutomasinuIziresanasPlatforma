@@ -11,6 +11,7 @@ export async function GET(req: NextRequest) {
           email: true,
           createdAt: true,
           updatedAt: true,
+          admin: true,
         }
       });
       return NextResponse.json({ users }, { status: 200 });

@@ -56,6 +56,11 @@ const Header = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Button className="justify-start w-full" variant="ghost" asChild>
+                    <Link href="/admin">Admin</Link>
+                  </Button>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Button className="justify-start w-full" variant="ghost" asChild>
                     <Link href="/account/settings">Settings</Link>
                   </Button>
                 </DropdownMenuItem>

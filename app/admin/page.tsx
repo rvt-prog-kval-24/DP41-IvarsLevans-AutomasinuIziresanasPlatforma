@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from 'react';
 import UserRentals from "@/components/account/user-rentals";
 import { useSession } from "next-auth/react";
@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { Button } from "../../components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../../components/ui/avatar";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface User {
   id: string;
@@ -20,34 +22,47 @@ interface User {
 const Admin = () => {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [users, setUsers] = useState<User[]>([]); // Typing the state with the User interface
-  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(null); // State to store the selected user's email
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUserEmail, setSelectedUserEmail] = useState<string | null>(session?.user?.email ?? null);
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
 
   useEffect(() => {
     if (status === "unauthenticated") {
       router.replace("/login");
     }
 
-    const fetchData = async () => {
-      const response = await fetch('/api/admin/users');
-      const data = await response.json();
-      if (response.ok) {
-        setUsers(data.users);
-      } else {
-        console.error('Failed to fetch users:', data.message);
+    const fetchUserData = async () => {
+      if (session?.user?.email) {
+        try {
+          const response = await fetch(`/api/admin/users`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch users');
+          }
+          const data = await response.json();
+          const currentUser = data.users.find((user: User) => user.email === session.user?.email);
+          if (currentUser?.admin) {
+            setIsAdmin(true);
+            setUsers(data.users);
+          } else {
+            setIsAdmin(false);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+          setIsAdmin(false);
+        }
       }
     };
 
     if (status === "authenticated") {
-      fetchData();
+      fetchUserData();
     }
-  }, [status, router]);
+  }, [status, router, session]);
 
   const handleDeleteUser = async (email: string) => {
     const confirmDelete = confirm(`Are you sure you want to delete the account of ${email}?`);
     if (confirmDelete) {
       const isCurrentUser = session?.user?.email === email;
-  
+
       const response = await fetch('/api/account', {
         method: 'DELETE',
         headers: {
@@ -55,33 +70,45 @@ const Admin = () => {
         },
         body: JSON.stringify({ email }),
       });
-  
+
       if (response.ok) {
+        toast.success('User deleted successfully!');
         // Refresh user list after deletion
         const updatedUsers = users.filter(user => user.email !== email);
         setUsers(updatedUsers);
-  
+
         // Sign out if the deleted account is the current user's account
         if (isCurrentUser) {
           try {
-            await signOut({ callbackUrl: '/login' }); // Sign out the current user with redirect to '/login'
+            await signOut({ callbackUrl: '/login' });
           } catch (error) {
             console.error('Error signing out:', error);
           }
+        } else {
+          router.replace('/admin');
         }
       } else {
+        toast.error('Error deleting user account!');
         console.error('Error deleting user account:', response.statusText);
-        // Handle error case
       }
     }
   };
 
   const handleViewBookings = (email: string) => {
-    // Update the state with the selected user's email
     setSelectedUserEmail(email);
   };
 
   const handleSetAdmin = async (email: string, isAdmin: boolean) => {
+    if (session?.user?.email === email) {
+      alert("You cannot change your own admin status.");
+      return;
+    }
+
+    const confirmChange = confirm(`Are you sure you want to ${isAdmin ? 'grant' : 'revoke'} admin privileges to ${email}?`);
+    if (!confirmChange) {
+      return;
+    }
+
     try {
       const response = await fetch('/api/admin/setAdmin', {
         method: 'POST',
@@ -90,49 +117,100 @@ const Admin = () => {
         },
         body: JSON.stringify({ email, isAdmin }),
       });
-  
+
       if (response.ok) {
         const updatedUsers = users.map(user => {
           if (user.email === email) {
-            return { ...user, admin: isAdmin }; // Update the admin status
+            return { ...user, admin: isAdmin };
           }
           return user;
         });
         setUsers(updatedUsers);
-        console.log(`Admin status updated successfully for user with email: ${email}`);
+        toast.success(`Admin status updated successfully for user with email: ${email}`);
+        router.replace('/admin');
       } else {
+        toast.error('Error setting admin status.');
         console.error('Error setting admin status:', response.statusText);
-        // Handle error case
       }
     } catch (error) {
+      toast.error('Error setting admin status.');
       console.error('Error setting admin status:', error);
-      // Handle error case
     }
   };
-  
+
   if (status === "loading") return <div>Loading...</div>;
 
-  const sortedUsers = [...users].sort((a, b) => (b.admin ? 1 : -1));
+  if (isAdmin === false) {
+    return (
+      <div className="container mx-auto px-6 py-12 lg:py-20 2xl:py-64 space-y-8 text-center">
+        <h1 className="text-2xl font-bold text-white">Access Denied</h1>
+        <p className="text-white">You do not have permission to view this page.</p>
+      </div>
+    );
+  }
+
+  if (isAdmin === null) {
+    return <div>Loading...</div>;
+  }
+
+  const currentUser = users.find(user => user.email === session?.user?.email);
+  const otherUsers = users.filter(user => user.email !== session?.user?.email).sort((a, b) => (b.admin ? 1 : -1));
 
   return (
     <div className="container mx-auto px-6 py-12 lg:py-20 2xl:py-24 space-y-8">
+      <ToastContainer />
       <div className="space-y-4" id="users">
         <h1 className="text-xl font-bold text-white">All Users</h1>
         <div className="flex w-full flex-col border p-8 gap-2 rounded-lg">
-        <ul>
-            {sortedUsers.map((user, index) => (
+          <ul>
+            {currentUser && (
+              <>
+                <li className="text-white flex items-center">
+                  <Avatar className="size-14 mr-4">
+                    <AvatarImage src={currentUser.image!} />
+                    <AvatarFallback className="text-black text-xl font-bold">
+                      {currentUser.name?.split(" ")[0][0]}
+                      {currentUser.name?.split(" ").slice(-1)[0][0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className={selectedUserEmail === currentUser.email ? "font-bold" : ""}>
+                      {currentUser.name} ({currentUser.email}) - Joined: {new Date(currentUser.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleViewBookings(currentUser.email)}
+                      className={selectedUserEmail === currentUser.email ? "bg-green-500" : ""}
+                    >
+                      View Bookings
+                    </Button>
+                    <Button onClick={() => handleDeleteUser(currentUser.email)}>Delete</Button>
+                    <Button
+                      onClick={() => handleSetAdmin(currentUser.email, !currentUser.admin)}
+                      className={currentUser.admin ? "bg-green-500" : ""}
+                    >
+                      Admin
+                    </Button>
+                  </div>
+                </li>
+                <hr className="my-2 border-t border-white/50" />
+              </>
+            )}
+            {otherUsers.map((user, index) => (
               <React.Fragment key={user.id}>
-                <li className="text-white flex justify-between items-center">
-                  {/* Render user information */}
-                  <Avatar className="size-16">
+                <li className="text-white flex items-center">
+                  <Avatar className="size-14 mr-4">
                     <AvatarImage src={user.image!} />
                     <AvatarFallback className="text-black text-xl font-bold">
                       {user.name?.split(" ")[0][0]}
                       {user.name?.split(" ").slice(-1)[0][0]}
                     </AvatarFallback>
                   </Avatar>
-                  <div className={session?.user?.email === user.email ? "font-bold" : ""}>
-                    {user.name} ({user.email}) - Joined: {new Date(user.createdAt).toLocaleDateString()}
+                  <div className="flex-1">
+                    <div className={selectedUserEmail === user.email ? "font-bold" : ""}>
+                      {user.name} ({user.email}) - Joined: {new Date(user.createdAt).toLocaleDateString()}
+                    </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
@@ -149,8 +227,8 @@ const Admin = () => {
                       Admin
                     </Button>
                   </div>
-                  </li>
-                {index !== sortedUsers.length - 1 && <hr className="my-2 border-t border-white/50" />}
+                </li>
+                {index !== otherUsers.length - 1 && <hr className="my-2 border-t border-white/50" />}
               </React.Fragment>
             ))}
           </ul>
@@ -158,7 +236,6 @@ const Admin = () => {
       </div>
       <div className="space-y-4" id="history">
         <h1 className="text-xl font-bold text-white">Bookings</h1>
-        {/* Pass the selected user's email to the UserRentals component */}
         <UserRentals email={selectedUserEmail ?? session?.user?.email!} />
       </div>
     </div>

@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { useRent } from "@/context/rent-context";
 import { useRouter } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 interface VehicleCardProps {
   car: ICar;
@@ -15,13 +16,20 @@ interface VehicleCardProps {
 const VehicleCard = ({ car }: VehicleCardProps) => {
   const { handleSetCar } = useRent();
   const router = useRouter();
+
   return (
     <Card
-      className="space-y-4 group"
+      className={twMerge(
+        "space-y-4 group",
+        car.available && "hover:border-primary/50 cursor-pointer",
+        !car.available && "opacity-25 cursor-not-allowed"
+      )}
       key={car.slug}
       onClick={() => {
-        handleSetCar(car);
-        router.push("/rent");
+        if (car.available) {
+          handleSetCar(car);
+          router.push("/rent");
+        }
       }}
     >
       <div className="relative aspect-video">
@@ -29,7 +37,11 @@ const VehicleCard = ({ car }: VehicleCardProps) => {
           src={`/cars/${car.slug}.png`}
           alt=""
           fill
-          className="object-contain p-4 hover:p-2 transition-[padding] border-b"
+          className={twMerge(
+            "object-contain p-4 transition-[padding] border-b",
+            car.available && "group-hover:p-2",
+            !car.available && "opacity-25"
+          )}
         />
       </div>
       <CardContent>
@@ -38,18 +50,19 @@ const VehicleCard = ({ car }: VehicleCardProps) => {
         </h2>
         <div className="flex items-center justify-between">
           <span className="text-gray-500">
-            € {car.rental_price.toFixed(2)}
-            /day
+            € {car.rental_price.toFixed(2)}/day
           </span>
-          <Button asChild>
-            <Link
-              href="/rent"
-              onClick={() => handleSetCar(car)}
-              className="opacity-100 lg:opacity-0 transition-opacity group-hover:opacity-100"
-            >
-              Book
-            </Link>
-          </Button>
+          {car.available && (
+            <Button asChild>
+              <Link
+                href="/rent"
+                onClick={() => handleSetCar(car)}
+                className="opacity-100 lg:opacity-0 transition-opacity group-hover:opacity-100"
+              >
+                Book
+              </Link>
+            </Button>
+          )}
         </div>
       </CardContent>
     </Card>

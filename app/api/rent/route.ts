@@ -52,3 +52,32 @@ export async function GET() {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json();
+    const { rentalId } = body;
+
+    const rental = await prisma.rental.findUnique({
+      where: { id: rentalId },
+      include: { car: true },
+    });
+
+    if (!rental) {
+      return NextResponse.json({ message: "Rental not found" }, { status: 404 });
+    }
+
+    await prisma.rental.delete({
+      where: { id: rentalId },
+    });
+
+    await prisma.car.update({
+      where: { id: rental.car.id },
+      data: { available: true },
+    });
+
+    return NextResponse.json({ message: "Rental deleted successfully" }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}

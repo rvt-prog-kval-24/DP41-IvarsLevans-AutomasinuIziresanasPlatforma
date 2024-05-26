@@ -15,16 +15,16 @@ const Vehicles = async () => {
           <div className="inline-block rounded-full bg-secondary px-3 py-1 text-sm">
             Available Models
           </div>
-          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "white" }}> 
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "white" }}>
             Explore Our Selection
           </h2>
-          <p className="max-w-[900px] md:text-xl lg:text-base xl:text-xl" style={{ color: "white" }}> 
+          <p className="max-w-[900px] md:text-xl lg:text-base xl:text-xl" style={{ color: "white" }}>
             Discover our diverse collection of vehicles, offering comfort, style, and performance.
           </p>
         </div>
         <div className="grid gap-8 py-12 grid-cols-1 md:grid-cols-2 xl:grid-cols-4">
           {vehicles.map((car) => (
-            <VehicleCard car={car} key={car.id} /> 
+            <VehicleCard car={car} key={car.id} />
           ))}
         </div>
       </section>

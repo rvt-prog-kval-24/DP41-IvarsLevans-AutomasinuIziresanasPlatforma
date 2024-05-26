@@ -2,6 +2,29 @@ import { prisma } from "@/lib/prisma";
 import { hash } from "bcryptjs";
 import { NextResponse } from "next/server";
 
+export async function GET(req: Request) {
+  try {
+    const url = new URL(req.url);
+    const email = url.searchParams.get("email");
+
+    if (!email) {
+      return NextResponse.json({ message: "Email is required" }, { status: 400 });
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ user }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -37,17 +60,15 @@ export async function POST(req: Request) {
   }
 }
 
-// New endpoint for deleting user account
-export async function DELETE(req: Request) {
+export async function PATCH(req: Request) {
   try {
-    const { email } = await req.json();
+    const body = await req.json();
+    const { email, name, newEmail, password } = body;
 
-    // Find the user by email
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
-    // If user doesn't exist, return an error
     if (!existingUser) {
       return NextResponse.json(
         { message: "User not found with provided email" },
@@ -55,7 +76,41 @@ export async function DELETE(req: Request) {
       );
     }
 
-    // Delete the user
+    const updateData: { name?: string; email?: string; password?: string } = {};
+    if (name) updateData.name = name;
+    if (newEmail) updateData.email = newEmail;
+    if (password) updateData.password = await hash(password, 10);
+
+    const updatedUser = await prisma.user.update({
+      where: { email },
+      data: updateData,
+    });
+
+    return NextResponse.json(
+      { user: updatedUser, message: "User updated successfully" },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json();
+    const { email } = body;
+
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (!existingUser) {
+      return NextResponse.json(
+        { message: "User not found with provided email" },
+        { status: 404 }
+      );
+    }
+
     await prisma.user.delete({
       where: { email },
     });

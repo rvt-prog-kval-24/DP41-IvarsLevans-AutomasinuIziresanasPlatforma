@@ -1,6 +1,6 @@
 "use client";
 import RentCarPreviewer from "@/components/rent/rent-car-previewer";
-import DealershipSelect from "@/components/rent/rent-dealership-select"; // Import DealershipSelect component
+import DealershipSelect from "@/components/rent/rent-dealership-select";
 import RentDatePicker from "@/components/rent/rent-date-picker";
 import RentHeader from "@/components/rent/rent-header";
 import RentVehicles from "@/components/rent/rent-vehicles";
@@ -11,6 +11,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { dayjs } from "@/lib/dayjs";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const steps: {
   title: string;
@@ -65,25 +67,29 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
         userEmail: session?.user?.email,
         startDate,
         finishDate,
-        dealership, // Include selectedDealership in the request body
+        dealership,
       }),
     });
 
     if (response.ok) {
+      toast.success('Booking created successfully!');
       router.push("/account/history");
       clearRent();
+    } else {
+      toast.error('Failed to create booking!');
     }
   }
 
   return (
     <section className="relative">
+      <ToastContainer />
       <RentHeader
         steps={steps}
         currentStep={currentStep}
         handleChangeStep={handleChangeStep}
       />
 
-      <div className="container mx-auto px-6 py-24 flex flex-col-reverse gap-8 xl:flex-row justify-between"> 
+      <div className="container mx-auto px-6 py-24 flex flex-col-reverse gap-8 xl:flex-row justify-between">
         {currentStep === 1 && (
           <div className="">
             <DealershipSelect /> {/* Include DealershipSelect component */}
@@ -92,20 +98,31 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
         )}
         {currentStep === 2 && <RentVehicles />}
 
-        {((currentStep === 1 && car) || currentStep === 2) && (
-          <div className="flex flex-col gap-8 border w-full xl:w-96 h-fit p-8 rounded-lg bg-white" style={{ marginTop: "150px" }}>
-            {car && <RentCarPreviewer />}
-            {car && currentStep === 2 && (
-              <Button onClick={handleIncrementStep}>
-                Book Vehicle
-              </Button>
-            )}
+        {(currentStep === 1 || currentStep === 2) && (
+          <div
+            className="flex flex-col gap-8 w-full xl:w-96 h-fit p-8 rounded-lg"
+            style={{
+              marginTop: "150px",
+              backgroundColor: car ? "white" : "black",
+              border: car ? "1px solid #ccc" : "none",
+            }}
+          >
+            {car ? (
+              <>
+                <RentCarPreviewer />
+                {currentStep === 2 && (
+                  <Button onClick={handleIncrementStep}>
+                    Book Vehicle
+                  </Button>
+                )}
+              </>
+            ) : null}
           </div>
         )}
 
         {currentStep === 3 && (
           <div className="flex flex-col w-full md:flex-row gap-8" style={{ marginTop: "90px" }}>
-            <div className="flex flex-col flex-1 border rounded-lg p-8 gap-8">
+            <div className="flex flex-col flex-1 border rounded-lg p-8 gap-4">
               <h1 className="text-3xl font-bold text-white">
                 Booking summary
               </h1>
@@ -149,13 +166,30 @@ const Rent = ({ searchParams }: { searchParams: { step: string } }) => {
                 </h1>
                 <h3 className="text-white text-foreground/50">{car?.year}</h3>
               </div>
-              <div className="relative aspect-video w-full">
+              <div className="relative aspect-video w-9/12">
                 <Image
                   src={`/cars/${car?.slug}.png`}
                   alt={`${car?.model}`}
                   className="object-contain"
                   fill
                 />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-white">
+                    Details:
+                </h3>
+                <h3 className="text-white text-xl flex flex-col gap-1" style={{ margin: "0.2em 0" }}>
+                    {car?.category && car.category.charAt(0).toUpperCase() + car.category.slice(1)}
+                </h3>
+                <h3 className="text-white text-xl flex flex-col gap-1" style={{ margin: "0.2em 0" }}>
+                    {car?.transmission && car.transmission.charAt(0).toUpperCase() + car.transmission.slice(1)}
+                </h3>
+                <h3 className="text-white text-xl flex flex-col gap-1" style={{ margin: "0.2em 0" }}>
+                    Highway kmpl: {car?.highway_kmpl}
+                </h3>
+                <h3 className="text-white text-xl flex flex-col gap-1" style={{ margin: "0.2em 0" }}>
+                    Kmpl: {car?.kmpl}
+                </h3>
               </div>
               <Button
                 onClick={handleCreateRent}

@@ -31,17 +31,15 @@ const Login = () => {
       return router.push("/");
     }
   }
-  // TODO: change the form and inputs to Form and Inputs components from shadcn/ui
 
   return (
-    <main className="flex flex-col gap-12 items-center justify-center h-auto">
-      <div className="space-y-2 text-center flex flex-col gap-4" style={{ marginTop: "150px" }}>
+    <main className="flex flex-col gap-6 items-center justify-center h-[80vh]"> {/* Adjusted gap */}
+      <div className="space-y-2 text-center flex flex-col gap-2" style={{ marginTop: "150px" }}>
         <h1 className="text-3xl font-bold text-white">Login</h1>
-        <p className="text-white">Enter your credentials to access your account.</p>
       </div>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
-          <label className="text-white font-medium" htmlFor="email ">
+          <label className="text-white font-medium" htmlFor="email">
             Email
           </label>
           <input
@@ -53,12 +51,10 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <label className="text-white font-medium" htmlFor="password">
-              Password
-            </label>
-          </div>
+        <div className="flex flex-col gap-2">
+          <label className="text-white font-medium" htmlFor="password">
+            Password
+          </label>
           <input
             id="password"
             placeholder="your password"
@@ -68,10 +64,9 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-          <Link className="text-sm text-primary hover:underline" href="#">
-              Forgot password?
-          </Link>
-        <Button type="submit">Sign in</Button>
+        <Button type="submit" className="mt-4"> {/* Added margin-top to increase gap */}
+          Sign in
+        </Button>
       </form>
       <div className="text-center text-sm text-gray-500 flex gap-2">
         Don't have an account?

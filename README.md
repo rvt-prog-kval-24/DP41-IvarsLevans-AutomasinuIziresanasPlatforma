@@ -51,6 +51,7 @@ npx prisma db seed
 - Next.js dokumentācija - https://nextjs.org/docs
 - NextAuth.js dokumentācija - https://next-auth.js.org/getting-started/introduction
 - Typescript dokumentācija - https://www.typescriptlang.org/
+- React-toastify dokumentācija - https://fkhadra.github.io/react-toastify/introduction
 - Tailwind CSS dokumentācija - https://tailwindcss.com/
 - Prisma dokumentācija - https://www.prisma.io/
 - PostgreSQL dokumentācija - https://www.postgresql.org/

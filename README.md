@@ -52,6 +52,10 @@ npx prisma db seed
 - NextAuth.js dokumentācija - https://next-auth.js.org/getting-started/introduction
 - Typescript dokumentācija - https://www.typescriptlang.org/
 - React-toastify dokumentācija - https://fkhadra.github.io/react-toastify/introduction
+- Lucide React dokumentācija - https://lucide.dev/guide/packages/lucide-react
+- React DayPicker dokumentācija - https://react-day-picker.js.org/
+- Radix dokumentācija - https://www.radix-ui.com/themes/docs/overview/getting-started
+- Material UI dokumentācija - https://mui.com/material-ui/getting-started/
 - Tailwind CSS dokumentācija - https://tailwindcss.com/
 - Prisma dokumentācija - https://www.prisma.io/
 - PostgreSQL dokumentācija - https://www.postgresql.org/

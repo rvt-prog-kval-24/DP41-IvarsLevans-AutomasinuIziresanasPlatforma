@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { signOut, getSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface InformationProps {
   user: {
@@ -17,8 +19,16 @@ const Information = ({ user, updateUser }: InformationProps) => {
   const [name, setName] = useState<string | undefined>(user.name || "");
   const [email, setEmail] = useState<string | undefined>(user.email || "");
   const [password, setPassword] = useState<string | undefined>("");
+  const [confirmPassword, setConfirmPassword] = useState<string | undefined>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const passwordRequirements = "Password must be at least 8 characters long, include at least one uppercase letter, one lowercase letter, one number, and one special character.";
+
+  const validatePassword = (password: string) => {
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return regex.test(password);
+  };
 
   useEffect(() => {
     setName(user.name || "");
@@ -45,7 +55,17 @@ const Information = ({ user, updateUser }: InformationProps) => {
 
     if (name && name !== user.name) updatedData.name = name;
     if (email && email !== user.email) updatedData.newEmail = email;
-    if (password) updatedData.password = password;
+    if (password) {
+      if (!validatePassword(password)) {
+        toast.error(passwordRequirements);
+        return;
+      }
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match.");
+        return;
+      }
+      updatedData.password = password;
+    }
 
     if (Object.keys(updatedData).length > 0) {
       setLoading(true);
@@ -74,13 +94,13 @@ const Information = ({ user, updateUser }: InformationProps) => {
           setName(updatedUser.name);
           setEmail(updatedUser.email);
           setPassword("");
+          setConfirmPassword("");
           updateUser(updatedUser, password); // Pass the new password if it was changed
-          window.location.reload(); // Refresh the page
+          toast.success("Account updated successfully!");
         }
-
-        // Optionally show a success message or update the UI in another way
       } catch (error) {
         setError("Error updating account: " + error);
+        toast.error("Error updating account: " + error);
         console.error("Error updating account:", error);
       } finally {
         setLoading(false);
@@ -103,15 +123,16 @@ const Information = ({ user, updateUser }: InformationProps) => {
       }
 
       // User deletion successful, sign out
-      signOut();
+      await signOut();
     } catch (error) {
       console.error("Error deleting account:", error);
-      // Display error message to the user
+      toast.error("Error deleting account: " + error);
     }
   };
 
   return (
     <div className="flex w-full xl:w-1/1 flex-col border p-8 gap-2 rounded-lg">
+      <ToastContainer />
       <div className="flex gap-4 items-center py-6">
         <Avatar className="size-16">
           <AvatarImage src={user.image!} />
@@ -164,6 +185,19 @@ const Information = ({ user, updateUser }: InformationProps) => {
           type="password"
           className="w-96 p-4 rounded-xl border outline-none"
           onChange={(e) => setPassword(e.target.value)}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="text-white font-medium" htmlFor="confirmPassword">
+          Confirm Password
+        </label>
+        <input
+          id="confirmPassword"
+          placeholder="confirm your password"
+          value={confirmPassword}
+          type="password"
+          className="w-96 p-4 rounded-xl border outline-none"
+          onChange={(e) => setConfirmPassword(e.target.value)}
         />
       </div>
       <div className="flex gap-4 mt-4">

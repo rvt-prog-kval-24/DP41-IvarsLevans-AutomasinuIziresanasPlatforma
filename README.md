@@ -2,47 +2,60 @@
 
 ## Projekta apraksts
 Projekts nodrošina automašīnu izirēšanas funkcionalitāti klientiem ar plašu marku un modeļu izvēli, intuitīvu lietototāju saskarni.
-Administratoriem caur kontroles paneli ir pieejama platformas lietotāju un produktu datu kontrole.
+Administratoriem caur kontroles paneli ir pieejama platformas lietotāju un rezervāciju datu kontrole.
 
 ## Izmantotās tehnoloģijas
-Projektā tiek izmantots:
+Projektā tiek pielietots:
 - Next.JS
 - TypeScript
 - Prisma
 - PostgreSQL
 
-## Izmantotie avoti
-- Sadaļa tiks papildināta izstrādes laikā
-
 ### Uzstādīšanas instrukcijas
-- Aizpildi .env datus:
+Aizpildi .env datus pēc sekojošā piemēra
 ```
 DATABASE_URL=postgres://YourUserName:YourPassword@YourHostname:5432/YourDatabaseName
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=string
 ```
-- Instalē npm modules:
+Instalē npm moduļus
 ```
 npm install
 ```
 
-- Datubāzes migrācija
+Datubāzes migrācija
 ```
 npx prisma migrate dev --name init
 ```
 
-- Palaid programmu
+Programmas palaišana
 ```
 npm run dev
 ```
 
-### Citas komandas:
+### Papildus komandas
 
-- Prisma ORM ģenerācija:
+Prisma ORM ģenerācija
 ```
 npx primsa generate
 ```
-- Datu bāzes datu seed:
+Datu bāzes datu aizpildīšana
 ```
 npx prisma db seed
 ```
+
+## Izmantotie avoti
+- ER diagramma - https://www.lucidchart.com/pages/er-diagrams
+- UML diagramma - https://www.lucidchart.com/pages/uml-use-case-diagram
+- Datu plūsmas diagramma - https://www.lucidchart.com/pages/data-flow-diagram
+- Next.js dokumentācija - https://nextjs.org/docs
+- NextAuth.js dokumentācija - https://next-auth.js.org/getting-started/introduction
+- Typescript dokumentācija - https://www.typescriptlang.org/
+- React-toastify dokumentācija - https://fkhadra.github.io/react-toastify/introduction
+- Lucide React dokumentācija - https://lucide.dev/guide/packages/lucide-react
+- React DayPicker dokumentācija - https://react-day-picker.js.org/
+- Radix dokumentācija - https://www.radix-ui.com/themes/docs/overview/getting-started
+- Material UI dokumentācija - https://mui.com/material-ui/getting-started/
+- Tailwind CSS dokumentācija - https://tailwindcss.com/
+- Prisma dokumentācija - https://www.prisma.io/
+- PostgreSQL dokumentācija - https://www.postgresql.org/

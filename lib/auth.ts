@@ -17,27 +17,29 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: { label: "Name", type: "text", placeholder: "jsmith" },
+        email: { label: "Email", type: "text", placeholder: "jsmith@example.com" },
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials.password) return null;
+        if (!credentials?.email || !credentials.password) {
+          throw new Error('Email and password are required');
+        }
 
         const existingUser = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
 
-        if (!existingUser) return null;
+        if (!existingUser) {
+          throw new Error('No user found with the given email');
+        }
 
-        const passwordMatch = compare(
-          credentials.password,
-          existingUser.password!
-        );
+        const passwordMatch = await compare(credentials.password, existingUser.password!);
 
-        if (!passwordMatch) return null;
+        if (!passwordMatch) {
+          throw new Error('Incorrect password');
+        }
 
         const { password, ...userWithoutPassword } = existingUser;
-
         return userWithoutPassword;
       },
     }),

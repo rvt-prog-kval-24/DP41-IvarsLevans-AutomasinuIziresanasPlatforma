@@ -4,6 +4,8 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { SyntheticEvent, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -21,7 +23,7 @@ const Login = () => {
     });
 
     if (signInData?.error) {
-      console.log(signInData.error);
+      toast.error(signInData.error);
     } else {
       const searchParams = new URLSearchParams(window.location.search);
       const referer = searchParams.get("referer");
@@ -33,7 +35,8 @@ const Login = () => {
   }
 
   return (
-    <main className="flex flex-col gap-6 items-center justify-center h-[80vh]"> {/* Adjusted gap */}
+    <main className="flex flex-col gap-6 items-center justify-center h-[80vh]">
+      <ToastContainer />
       <div className="space-y-2 text-center flex flex-col gap-2" style={{ marginTop: "150px" }}>
         <h1 className="text-3xl font-bold text-white">Login</h1>
       </div>
@@ -64,7 +67,7 @@ const Login = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Button type="submit" className="mt-4"> {/* Added margin-top to increase gap */}
+        <Button type="submit" className="mt-4">
           Sign in
         </Button>
       </form>

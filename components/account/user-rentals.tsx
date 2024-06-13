@@ -7,6 +7,8 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 interface UserRentalProps {
   email: string | null; // Allow the email prop to be nullable
@@ -62,11 +64,11 @@ const UserRentals = ({ email }: UserRentalProps) => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to toggle booking!');
+        throw new Error('Failed to toggle booking');
       }
 
       const data = await response.json();
-      toast.success('Booking toggled successfully!');
+      toast.success('Booking toggled successfully');
 
       // Update the rental list with the updated rental
       setRentals((prevRentals) =>
@@ -75,14 +77,14 @@ const UserRentals = ({ email }: UserRentalProps) => {
         )
       );
     } catch (error) {
-      toast.error('Error toggling booking!');
+      toast.error('Error toggling booking');
       console.error('Error toggling booking:', error);
     }
   };
 
   const handleDeleteBooking = async (rentalId: string, ongoing: boolean) => {
     if (ongoing) {
-      toast.error('Cannot delete a booking in progress!');
+      toast.error('Cannot delete a booking in progress');
       return;
     }
 
@@ -100,16 +102,42 @@ const UserRentals = ({ email }: UserRentalProps) => {
       }
 
       const data = await response.json();
-      toast.success('Booking deleted successfully!');
+      toast.success('Booking deleted successfully');
 
       // Update the rental list after deletion
       setRentals((prevRentals) =>
         prevRentals.filter((rental) => rental.id !== rentalId)
       );
     } catch (error) {
-      toast.error('Error deleting booking!');
+      toast.error('Error deleting booking');
       console.error('Error deleting booking:', error);
     }
+  };
+
+  const generatePDF = (rental: IRental) => {
+    const doc = new jsPDF();
+    const tableColumn = ["Key", "Value"];
+    const tableRows = [
+      ["Name of Client", session?.user?.name || ""],
+      ["Pick up date", dayjs(rental.startDate).format("LLL")],
+      ["Drop off date", dayjs(rental.endDate).format("LLL")],
+      ["Total price", `€ ${rental.totalPrice.toFixed(2)}`],
+      ["Pick Up & Drop Off Address", rental.dealership?.address || ""],
+      ["Car", `${rental.car.manufacturer} ${rental.car.model} (${rental.car.year})`],
+      ["Category", rental.car.category || ""],
+      ["Transmission", rental.car.transmission || ""],
+      ["Highway kmpl", rental.car.highway_kmpl.toString()],
+      ["Kmpl", rental.car.kmpl.toString()],
+    ];
+
+    doc.text("Rental Summary", 14, 16);
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save(`rental_summary_${rental.id}.pdf`);
   };
 
   return (
@@ -159,7 +187,6 @@ const UserRentals = ({ email }: UserRentalProps) => {
           </div>
           <div className="flex flex-col justify-center relative">
             <div className="space-y-2">
-              {/* Increased font size for manufacturer, model, and year */}
               <h1 className="text-white text-2xl font-bold">
                 <span className="font-normal">{rental.car.manufacturer} </span>
                 {rental.car.model}
@@ -174,7 +201,12 @@ const UserRentals = ({ email }: UserRentalProps) => {
                 layout="fill"
               />
             </div>
-            {/* Toggle Booking Button */}
+            <button
+              className="bg-primary text-white px-4 py-1 rounded-md mt-4"
+              onClick={() => generatePDF(rental)}
+            >
+              Export to PDF
+            </button>
             {isAdmin && (
               <button
                 className="bg-primary text-white px-4 py-1 rounded-md mt-4"
